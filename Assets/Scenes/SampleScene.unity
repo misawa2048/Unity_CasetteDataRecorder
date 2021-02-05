@@ -745,7 +745,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_textAsset: {fileID: 4900000, guid: a1100891c9b904f4290f6b0da5d90b81, type: 3}
-  m_url: https://raw.githubusercontent.com/pmndrs/react-three-fiber/master/src/targets/css3d.tsx
+  m_url: http://www.gutenberg.org/cache/epub/20781/pg20781.txt
   m_progressImage: {fileID: 2074485550}
   position: 0
   samplerate: 44100
@@ -1576,7 +1576,7 @@ MonoBehaviour:
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 0
-  m_FillAmount: 0.058
+  m_FillAmount: 0
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0

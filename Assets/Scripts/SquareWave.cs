@@ -38,7 +38,7 @@ public class SquareWave : MonoBehaviour
             m_sqWaves[i] = Mathf.Clamp(Mathf.Sin(2f * Mathf.PI * frequency * (float)i / samplerate) * 2f, -1f, 1f);
         }
         wavePtr = 0;
-        pulseW = samplerate / 1200;
+        pulseW = samplerate / (int)frequency;
         pulseWCtr = 0;
         pulseSpd = 1;
         bitPtr = 0;
@@ -100,7 +100,7 @@ public class SquareWave : MonoBehaviour
     {
         if (_isStarted)
         {
-            Debug.Log(m_fileProgress + "/" + m_fileBytes.Length);
+            //Debug.Log(m_fileProgress + "/" + m_fileBytes.Length);
             byte dat = m_fileBytes[m_filePosPtr];
             bitDataArr[0] = 0;
             for (int i = 0; i < 8; ++i)
