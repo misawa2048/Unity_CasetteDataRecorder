@@ -10,6 +10,10 @@ public class SquareWave : MonoBehaviour
     [SerializeField] float m_bps = 1200;
     [SerializeField] InputField m_url = null;
     [SerializeField] Image m_progressImage = null;
+    [SerializeField] Image m_ledImage = null;
+    [SerializeField] Color m_ledOnColor = Color.white;
+    [SerializeField] Color m_ledOffColor = Color.black;
+    [SerializeField] AudioClip m_stopClip = null;
     int m_pulseW;
     int m_pulseWCtr;
     AudioSource m_ac;
@@ -48,6 +52,7 @@ public class SquareWave : MonoBehaviour
     {
         if (m_isStarted)
         {
+            m_ledImage.color = (m_m_pulseSpd == 1) ? m_ledOffColor : m_ledOnColor;
             m_progressImage.fillAmount = (float)m_fileProgress / (float)m_fileBytes.Length;
             if (m_isFinished)
             {
@@ -128,17 +133,21 @@ public class SquareWave : MonoBehaviour
     {
         OnCasseteStop();
         m_clip = AudioClip.Create("MySinusoid", m_samplerate * 2, 1, m_samplerate, true, OnAudioRead, OnAudioSetPosition);
+        //m_clip = m_ac.clip;
+        //m_clip.SetData(m_sqWaves, 0);
         m_ac.clip = m_clip;
         StartCoroutine(GetDataCo());
     }
 
     public void OnCasseteStop()
     {
+        m_ledImage.color = m_ledOffColor;
         m_progressImage.fillAmount = 0;
         m_isStarted = false;
         m_isFinished = false;
         m_fileProgress = 0;
         m_ac.Stop();
+        m_ac.PlayOneShot(m_stopClip);
     }
 
 
