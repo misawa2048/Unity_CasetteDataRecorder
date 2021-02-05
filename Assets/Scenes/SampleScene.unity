@@ -751,6 +751,7 @@ MonoBehaviour:
   m_ledImage: {fileID: 2132265108}
   m_ledOnColor: {r: 0.70031375, g: 0.9811321, b: 0.58775365, a: 1}
   m_ledOffColor: {r: 0.31747127, g: 0.3679245, b: 0.30371127, a: 1}
+  m_stopClip: {fileID: 8300000, guid: a4a151b25fe725f4bb918df6e27bd3b7, type: 3}
 --- !u!82 &876859855
 AudioSource:
   m_ObjectHideFlags: 0
