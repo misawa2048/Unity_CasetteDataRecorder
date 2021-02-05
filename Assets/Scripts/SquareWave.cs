@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 using UnityEngine.Networking;
 
 [RequireComponent(typeof(AudioSource))]
@@ -7,6 +8,7 @@ public class SquareWave : MonoBehaviour
 {
     [SerializeField] TextAsset m_textAsset = null;
     [SerializeField] string m_url = "http://www.gutenberg.org/cache/epub/20781/pg20781.txt";
+    [SerializeField] Image m_progressImage = null;
     AudioSource m_ac;
     public int position = 0;
     public int samplerate = 44100;
@@ -20,6 +22,7 @@ public class SquareWave : MonoBehaviour
     int bitPtr;
     byte[] m_fileBytes;
     int m_filePosPtr;
+    int m_fileProgress;
     bool m_isStarted;
     bool m_isFinished;
     AudioClip m_clip;
@@ -28,7 +31,7 @@ public class SquareWave : MonoBehaviour
     {
         m_fileBytes = m_textAsset.bytes;
         m_filePosPtr = 0;
-//        setFileDataOne(false);
+        m_fileProgress = 0;
         m_sqWaves = new float[samplerate * 2];
         for(int i=0;i< m_sqWaves.Length; ++i)
         {
@@ -52,6 +55,7 @@ public class SquareWave : MonoBehaviour
     {
         if (m_ac.isPlaying)
         {
+            m_progressImage.fillAmount = (float)m_fileProgress / (float)m_fileBytes.Length;
             if (m_isFinished)
             {
                 m_ac.Stop();
@@ -61,6 +65,9 @@ public class SquareWave : MonoBehaviour
 
     void OnAudioRead(float[] data)
     {
+        if (m_isFinished)
+            return;
+
         for(int i = 0; i < data.Length; ++i)
         {
             data[i] = m_sqWaves[wavePtr];
@@ -73,11 +80,12 @@ public class SquareWave : MonoBehaviour
                 bitPtr++;
                 if(bitPtr>= bitDataArr.Length)
                 {
+                    bitPtr -= bitDataArr.Length;
                     if (setFileDataOne(m_isStarted))
                     {
                         m_isFinished = true;
+                        break;
                     }
-                    bitPtr -= bitDataArr.Length;
                 }
             }
         }
@@ -92,7 +100,7 @@ public class SquareWave : MonoBehaviour
     {
         if (_isStarted)
         {
-            Debug.Log(m_filePosPtr + "/" + m_fileBytes.Length);
+            Debug.Log(m_fileProgress + "/" + m_fileBytes.Length);
             byte dat = m_fileBytes[m_filePosPtr];
             bitDataArr[0] = 0;
             for (int i = 0; i < 8; ++i)
@@ -102,7 +110,7 @@ public class SquareWave : MonoBehaviour
             bitDataArr[9] = 1;
             bitDataArr[10] = 1;
             m_filePosPtr = (m_filePosPtr + 1) % m_fileBytes.Length;
-            return (m_filePosPtr == 0);
+            m_fileProgress++;
         }
         else
         {
@@ -110,8 +118,8 @@ public class SquareWave : MonoBehaviour
             {
                 bitDataArr[i] = 0;
             }
-            return false;
         }
+        return (m_fileProgress > m_fileBytes.Length);
     }
 
     IEnumerator GetDataCo()
@@ -138,6 +146,7 @@ public class SquareWave : MonoBehaviour
 
                 Debug.Log("!"+text);
                 m_fileBytes = www.downloadHandler.data;
+                Debug.Log("!" + m_fileBytes.Length);
 
                 Debug.Log("3");
                 m_isStarted = true;
