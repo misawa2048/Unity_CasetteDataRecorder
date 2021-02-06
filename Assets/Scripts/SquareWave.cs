@@ -107,6 +107,10 @@ public class SquareWave : MonoBehaviour
     {
         if (_isStarted)
         {
+            if(m_fileBytes.Length<= m_fileProgress)
+            {
+                return true;
+            }
             //Debug.Log(m_fileProgress + "/" + m_fileBytes.Length);
             byte dat = m_fileBytes[m_filePosPtr];
             m_bitDataArr[0] = 0;
@@ -155,6 +159,13 @@ public class SquareWave : MonoBehaviour
     {
         m_ac.Stop();
         m_ac.Play();
+
+        if (!m_url.text.StartsWith("http"))
+        {
+            m_fileBytes = System.Text.Encoding.ASCII.GetBytes(m_url.text);
+            m_isStarted = true;
+            yield break;
+        }
 
         UnityWebRequest www = new UnityWebRequest(m_url.text);
         www.method = UnityWebRequest.kHttpVerbGET;
